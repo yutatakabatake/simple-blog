@@ -42,3 +42,55 @@ export async function registerUser(req, res) {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
+
+export async function login(req, res) {
+    try {
+        const result = validationResult(req);
+        if (!result.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                errors: result.array().map(err => ({
+                    field: err.path,
+                    message: err.msg
+                }))
+            });
+        }
+
+        const { email, password } = req.body;
+        const userData = { email: email };
+
+        const user = await userServices.getUser(userData);
+        if (!user) {
+            return res.status(400).json([
+                {
+                    message: "This user does not exist"
+                }
+            ]);
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password_hash);
+        if (!isMatch) {
+            return res.status(400).json([
+                {
+                    message: "Password is incorrect"
+                }
+            ]);
+        }
+
+        const token = jwt.sign(
+            { email }, 'SECRET_KEY', { expiresIn: '24h' }
+        );
+
+        res.status(201).json({
+            token: token,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}

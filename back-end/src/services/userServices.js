@@ -11,3 +11,14 @@ export async function registerUser(userData) {
 
     return rows[0];
 }
+
+export async function getUser(userData) {
+    const { email } = userData;
+    const { rows } = await query(`
+        SELECT id, name, email, password_hash
+        FROM users_test
+        WHERE email = $1`,
+        [email]);
+
+    return rows[0];
+}
