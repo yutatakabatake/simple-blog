@@ -9,3 +9,25 @@ export async function getPublicPosts(req, res) {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
+
+export async function addNewPost(req, res) {
+    try {
+        const { author_id, title, excerpt, content, published } = req.body;
+        if (!author_id || !title || !excerpt || !content || !published) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        const postData = { author_id, title, excerpt, content, published };
+
+        if (published) {
+            const newPost = await postServices.addNewPublicPost(postData);
+            res.status(201).json(newPost);
+        } else {
+            const newPost = await postServices.addNewDraftPost(postData);
+            res.status(201).json(newPost);
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}

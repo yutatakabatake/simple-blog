@@ -17,3 +17,27 @@ export async function getPublicPosts() {
 
     return rows[0];
 }
+
+export async function addNewPublicPost(postData) {
+    const { author_id, title, excerpt, content, published } = postData;
+    const { rows } = await query(`
+        INSERT INTO posts_test (author_id, title, excerpt, content, published, published_at)
+        VALUES ($1, $2, $3, $4, $5, NOW())
+        RETURNING id, title, excerpt, content, updated_at, published_at`,
+        [author_id, title, excerpt, content, published]
+    );
+
+    return rows[0];
+}
+
+export async function addNewDraftPost(postData) {
+    const { author_id, title, excerpt, content, published } = postData;
+    const { rows } = await query(`
+        INSERT INTO posts_test (author_id, title, excerpt, content, published)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING id, title, excerpt, content, updated_at, published_at`,
+        [author_id, title, excerpt, content, published]
+    );
+
+    return rows[0];
+}
