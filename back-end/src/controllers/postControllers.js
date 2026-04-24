@@ -1,3 +1,4 @@
+import userRouter from "../routes/userRoutes.js";
 import * as postServices from "../services/postServices.js";
 
 export async function getPublicPosts(req, res) {
@@ -26,6 +27,22 @@ export async function addNewPost(req, res) {
             const newPost = await postServices.addNewDraftPost(postData);
             res.status(201).json(newPost);
         }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+export async function getMyPosts(req, res) {
+    try {
+        const { author_id } = req.body;
+        if (!author_id) {
+            res.status(400).json({ error: 'Missing required fields' });
+        }
+        const userData = { author_id };
+
+        const myPosts = await postServices.getMyPosts(userData);
+        res.status(200).json(myPosts);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
