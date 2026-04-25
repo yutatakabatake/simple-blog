@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { ArrowLeft, Save } from 'lucide-react';
 import type { User } from '../types/user';
+import axios from 'axios';
 
 interface NewPostProps {
     currentUser: User;
@@ -9,11 +10,24 @@ interface NewPostProps {
 
 function NewPost({ currentUser }: NewPostProps) {
     const navigate = useNavigate();
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
-    const [published, setPublished] = useState(false);
+    const [title, setTitle] = useState<string>('');
+    const [excerpt, setExcerpt] = useState<string>('');
+    const [content, setContent] = useState<string>('');
+    const [published, setPublished] = useState<boolean>(false);
 
-    const handleSave = () => {
+    async function handleSave() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return;
+        }
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        await axios.post('http://localhost:3000/api/post/new', {
+            author_id: currentUser.id,
+            title,
+            excerpt,
+            content,
+            published
+        });
         alert(`「${title}」を保存しました（著者: ${currentUser.name}）`);
         navigate('/dashboard');
     };
@@ -65,6 +79,20 @@ function NewPost({ currentUser }: NewPostProps) {
                             onChange={(e) => setTitle(e.target.value)}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition text-2xl font-semibold"
                             placeholder="記事のタイトルを入力..."
+                        />
+                    </div>
+
+                    <div className='mb-6'>
+                        <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 mb-2">
+                            抜粋
+                        </label>
+                        <textarea
+                            id="excerpt"
+                            value={excerpt}
+                            onChange={(e) => setExcerpt(e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition resize-none"
+                            rows={2}
+                            placeholder="ここに記事の簡単な紹介を書きましょう..."
                         />
                     </div>
 
