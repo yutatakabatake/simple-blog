@@ -1,73 +1,61 @@
-# React + TypeScript + Vite
+# front-end
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + TypeScript + Vite front-end for the `simple-blog` application.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+This front-end provides:
 
-## React Compiler
+- Public blog list and post detail pages
+- User registration and login
+- Authenticated dashboard for managing posts
+- Create, edit, publish, and delete posts
+- Profile settings page
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech stack
 
-## Expanding the ESLint configuration
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- Axios
+- React Router
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Install
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd front-end
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Run
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+The app runs on `http://localhost:5173`.
+
+## Application structure
+
+- `src/App.tsx`: route definitions and authentication state management
+- `src/components/`: login, register, dashboard, post editor, public blog, settings
+- `src/types/`: TypeScript definitions for `User` and `Post`
+
+## Backend integration
+
+The front-end communicates with the back-end API at `http://localhost:3000/api`.
+
+- `axios.defaults.withCredentials = true` is enabled for cookie-based JWT auth.
+- Protected routes require login before access.
+
+## Routes
+
+- `/`: public blog list
+- `/post/:id`: public post details
+- `/login`: login page
+- `/register`: registration page
+- `/dashboard`: author dashboard
+- `/admin/new-post`: create a new post
+- `/admin/post/:id/edit`: edit an existing post
+- `/settings`: user profile settings
