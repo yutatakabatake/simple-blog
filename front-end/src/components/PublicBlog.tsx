@@ -1,12 +1,47 @@
 import { Link } from 'react-router';
 import { Calendar, Eye, LogIn, LayoutDashboard, User } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import type { Post } from '../types/post';
+import axios from 'axios';
+import dayjs from 'dayjs';
 
 interface PublicBlogProps {
     isAuthenticated: boolean;
-    mockPosts: any[];
 }
 
-function PublicBlog({ isAuthenticated, mockPosts }: PublicBlogProps) {
+function PublicBlog({ isAuthenticated }: PublicBlogProps) {
+    const [posts, setPosts] = useState<Post[]>([]);
+    useEffect(() => {
+        let ignore = false;
+        async function fetchPosts() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    return;
+                }
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                const response = await axios.get('http://localhost:3000/api/post/public');
+                const resPosts: Post[] = response.data;
+                const formattedPosts: Post[] = resPosts.map(post => ({
+                    ...post,
+                    updated_at: dayjs(post.updated_at),
+                    published_at: dayjs(post.published_at)
+                }));
+                if (!ignore) {
+                    setPosts(formattedPosts);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        fetchPosts();
+
+        return () => {
+            ignore = true;
+        };
+    }, []);
+
     return (
         <div className="min-h-screen bg-linear-to-br from-slate-50 to-blue-50">
             <nav className="bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-200 sticky top-0 z-10">
@@ -49,7 +84,7 @@ function PublicBlog({ isAuthenticated, mockPosts }: PublicBlogProps) {
                 </div>
 
                 <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                    {mockPosts.filter(post => post.published)
+                    {posts.filter(post => post.published)
                         .map((post) => (
                             <Link
                                 key={post.id}
@@ -66,11 +101,11 @@ function PublicBlog({ isAuthenticated, mockPosts }: PublicBlogProps) {
                                     <div className="flex items-center justify-between text-sm text-gray-500">
                                         <div className="flex items-center gap-1">
                                             <Calendar className="w-4 h-4" />
-                                            {post.date.format('YYYY/MM/DD')}
+                                            {post.updated_at.format('YYYY/MM/DD')}
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <User className="w-4 h-4" />
-                                            {post.authorName}
+                                            {post.author_name}
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <Eye className="w-4 h-4" />
@@ -82,7 +117,7 @@ function PublicBlog({ isAuthenticated, mockPosts }: PublicBlogProps) {
                         ))}
                 </div>
 
-                {mockPosts.length === 0 && (
+                {posts.length === 0 && (
                     <div className="text-center py-16">
                         <p className="text-gray-500 text-lg">まだ投稿がありません</p>
                     </div>

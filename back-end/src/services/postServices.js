@@ -4,18 +4,21 @@ export async function getPublicPosts() {
     const { rows } = await query(`
         SELECT
             p.id,
+            u.id AS author_id,
+            u.name AS author_name,
             p.title,
             p.excerpt,
             p.content,
-            p.updated_at,
+            p.views,
+            p.published,
             p.published_at,
-            u.name AS author_name
+            p.updated_at
         FROM posts_test p
         JOIN users_test u ON p.author_id = u.id
         WHERE p.published
         ORDER BY p.published_at DESC`);
 
-    return rows[0];
+    return rows;
 }
 
 export async function addNewPublicPost(postData) {
