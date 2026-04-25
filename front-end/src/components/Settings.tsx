@@ -81,40 +81,7 @@ function Settings({ currentUser }: SettingsProps) {
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <div className="flex items-center gap-2 mb-6">
-                            <Globe className="w-6 h-6 text-green-600" />
-                            <h2 className="text-xl font-semibold text-gray-900">ブログ設定</h2>
-                        </div>
 
-                        <div className="space-y-4">
-                            <div>
-                                <label htmlFor="blogTitle" className="block text-sm font-medium text-gray-700 mb-2">
-                                    ブログタイトル
-                                </label>
-                                <input
-                                    id="blogTitle"
-                                    type="text"
-                                    value={blogTitle}
-                                    onChange={(e) => setBlogTitle(e.target.value)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
-                                />
-                            </div>
-
-                            <div>
-                                <label htmlFor="blogDescription" className="block text-sm font-medium text-gray-700 mb-2">
-                                    ブログの説明
-                                </label>
-                                <textarea
-                                    id="blogDescription"
-                                    value={blogDescription}
-                                    onChange={(e) => setBlogDescription(e.target.value)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition resize-none"
-                                    rows={3}
-                                />
-                            </div>
-                        </div>
-                    </div>
 
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                         <div className="flex items-center gap-2 mb-6">
