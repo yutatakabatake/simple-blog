@@ -1,14 +1,49 @@
 import { Link, useParams } from 'react-router';
-import { ArrowLeft, Calendar, Eye, LogIn, LayoutDashboard, User } from 'lucide-react';
+import { ArrowLeft, Calendar, Eye, LogIn, LayoutDashboard, User, CalendarSync } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import type { Post } from '../types/post';
+import axios from 'axios';
+import dayjs from 'dayjs';
 
 interface PublicPostDetailProps {
     isAuthenticated: boolean;
-    mockPosts: any[];
 }
 
-function PublicPostDetail({ isAuthenticated, mockPosts }: PublicPostDetailProps) {
+function PublicPostDetail({ isAuthenticated }: PublicPostDetailProps) {
+    const [posts, setPosts] = useState<Post[]>([]);
+    useEffect(() => {
+        let ignore = false;
+        async function fetchPosts() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    return;
+                }
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                const response = await axios.get('http://localhost:3000/api/post/public');
+                const resPosts: Post[] = response.data;
+                const formattedPosts: Post[] = resPosts.map(post => ({
+                    ...post,
+                    updated_at: dayjs(post.updated_at),
+                    published_at: dayjs(post.published_at)
+                }));
+                if (!ignore) {
+                    setPosts(formattedPosts);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        fetchPosts();
+
+        return () => {
+            ignore = true;
+        };
+    }, []);
+
     const { id } = useParams();
-    const post = mockPosts.find(p => p.id === Number(id));
+    const post = posts.find(p => p.id === Number(id));
 
     if (!post) {
         return (
@@ -63,21 +98,21 @@ function PublicPostDetail({ isAuthenticated, mockPosts }: PublicPostDetailProps)
                     記事一覧に戻る
                 </Link>
                 <article className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-                    <div className="h-64 bg-linear-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
-                        <div className="text-8xl font-bold text-indigo-200">{post.id}</div>
-                    </div>
-
                     <div className="p-8 md:p-12">
                         <div className="mb-8">
                             <h1 className="text-4xl font-bold text-gray-900 mb-6">{post.title}</h1>
                             <div className="flex flex-wrap items-center gap-6 text-gray-600">
                                 <div className="flex items-center gap-2">
                                     <User className="w-5 h-5" />
-                                    <span>{post.authorName}</span>
+                                    <span>{post.author_name}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Calendar className="w-5 h-5" />
-                                    <span>{post.date}</span>
+                                    <span>{post.published_at.format('YYYY/MM/DD')}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <CalendarSync className="w-5 h-5" />
+                                    <span>{post.updated_at.format('YYYY/MM/DD')}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Eye className="w-5 h-5" />
