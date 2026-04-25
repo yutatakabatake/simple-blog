@@ -1,15 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { ArrowLeft, User, Mail, Lock, Globe, Save } from 'lucide-react';
-
-interface CurrentUser {
-    id: string;
-    name: string;
-    email: string;
-}
+import type { User as UserType } from '../types/user';
 
 interface SettingsProps {
-    currentUser: CurrentUser;
+    currentUser: UserType;
 }
 
 function Settings({ currentUser }: SettingsProps) {
