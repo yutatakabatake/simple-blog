@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 
 export type Post = {
     id: number,
-    authorId: number,
+    author_id: number,
     author_name: string,
     title: string,
     excerpt: string,
