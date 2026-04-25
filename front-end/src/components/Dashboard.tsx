@@ -15,7 +15,7 @@ function Dashboard({ currentUser, onLogout }: DashboardProps) {
     const [posts, setPosts] = useState<Post[]>([]);
     useEffect(() => {
         let ignore = false;
-        async function fetchTasks() {
+        async function fetchPosts() {
             try {
                 const token = localStorage.getItem('token');
                 if (!token) {
@@ -37,7 +37,7 @@ function Dashboard({ currentUser, onLogout }: DashboardProps) {
             }
         }
 
-        fetchTasks();
+        fetchPosts();
 
         return () => {
             ignore = true;
