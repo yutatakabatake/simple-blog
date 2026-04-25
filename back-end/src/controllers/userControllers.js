@@ -78,7 +78,7 @@ export async function login(req, res) {
         }
 
         const token = jwt.sign(
-            { email }, 'SECRET_KEY', { expiresIn: '24h' }
+            { email }, ACCESS_TOKEN_SECRET, { expiresIn: '24h' }
         );
 
         res.status(201).json({
