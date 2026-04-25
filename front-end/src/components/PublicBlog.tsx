@@ -15,11 +15,6 @@ function PublicBlog({ isAuthenticated }: PublicBlogProps) {
         let ignore = false;
         async function fetchPosts() {
             try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    return;
-                }
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 const response = await axios.get('http://localhost:3000/api/post/public');
                 const resPosts: Post[] = response.data;
                 const formattedPosts: Post[] = resPosts.map(post => ({

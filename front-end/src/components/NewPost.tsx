@@ -16,20 +16,19 @@ function NewPost({ currentUser }: NewPostProps) {
     const [published, setPublished] = useState<boolean>(false);
 
     async function handleSave() {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            return;
+        try {
+            await axios.post('http://localhost:3000/api/post/new', {
+                author_id: currentUser.id,
+                title,
+                excerpt,
+                content,
+                published
+            });
+            alert(`「${title}」を保存しました（著者: ${currentUser.name}）`);
+            navigate('/dashboard');
+        } catch (error) {
+            console.log(error);
         }
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        await axios.post('http://localhost:3000/api/post/new', {
-            author_id: currentUser.id,
-            title,
-            excerpt,
-            content,
-            published
-        });
-        alert(`「${title}」を保存しました（著者: ${currentUser.name}）`);
-        navigate('/dashboard');
     };
 
     return (

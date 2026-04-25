@@ -11,6 +11,7 @@ import PublicPostDetail from './components/PublicPostDetail';
 import './App.css'
 import type { User } from './types/user';
 import type { Post } from './types/post';
+import axios from 'axios';
 
 function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -27,6 +28,8 @@ function App() {
   function handleEditUser(user: User): void {
     setCurrentUser(user);
   }
+
+  axios.defaults.withCredentials = true;
 
   return (
     <BrowserRouter>

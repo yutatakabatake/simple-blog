@@ -21,9 +21,8 @@ function Register({ onRegister }: RegisterProps) {
             try {
                 const registerData = { name: name, email: email, password: password };
                 const response = await axios.post(`http://localhost:3000/api/user/register`, registerData);
-                const { token, user } = response.data;
+                const user = response.data;
                 onRegister(user);
-                localStorage.setItem('token', token);
             } catch (error) {
                 console.error('Error registering user:', error);
             }

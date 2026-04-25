@@ -43,13 +43,7 @@ function EditPost({ currentUser, myPosts, setMyPosts }: EditPostProps) {
             return;
         }
 
-        const token = localStorage.getItem('token');
-        if (!token) {
-            return;
-        }
-
         try {
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
             const response = await axios.put(`http://localhost:3000/api/post/edit/${id}`,
                 {
                     author_id: currentUser.id,
@@ -79,13 +73,7 @@ function EditPost({ currentUser, myPosts, setMyPosts }: EditPostProps) {
             return;
         }
         if (confirm('本当にこの記事を削除しますか？')) {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                return;
-            }
-
             try {
-                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                 await axios.delete(`http://localhost:3000/api/post/delete/${id}`,
                     { data: { author_id: currentUser.id } }
                 );

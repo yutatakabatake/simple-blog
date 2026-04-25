@@ -29,14 +29,14 @@ export async function registerUser(req, res) {
             { email }, ACCESS_TOKEN_SECRET, { expiresIn: '24h' }
         );
 
-        res.status(201).json({
-            token: token,
-            user: {
-                id: newUser.id,
-                name: newUser.name,
-                email: newUser.email
-            }
+        res.cookie('jwt_token', token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: 3600000
         });
+
+        res.status(201).json(newUser);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -81,14 +81,14 @@ export async function login(req, res) {
             { email }, ACCESS_TOKEN_SECRET, { expiresIn: '24h' }
         );
 
-        res.status(201).json({
-            token: token,
-            user: {
-                id: user.id,
-                name: user.name,
-                email: user.email
-            }
+        res.cookie('jwt_token', token, {
+            httpOnly: true,     // JavaScriptからアクセス不可
+            secure: true,       // HTTPS通信でのみ送信
+            sameSite: 'strict', // CSRF攻撃対策
+            maxAge: 3600000     // 1時間（ミリ秒）
         });
+
+        res.status(201).json(user);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });

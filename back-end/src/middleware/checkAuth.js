@@ -3,8 +3,7 @@ import jwt from "jsonwebtoken";
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 
 function checkAuth(req, res, next) {
-    const authHeader = req.header("Authorization");
-    const token = authHeader && authHeader.split(' ')[1];
+    const token = req.cookies.jwt_token;
     if (!token) {
         res.status(401).json([
             {
