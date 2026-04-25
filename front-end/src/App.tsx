@@ -10,9 +10,11 @@ import PublicBlog from './components/PublicBlog';
 import PublicPostDetail from './components/PublicPostDetail';
 import './App.css'
 import type { User } from './types/user';
+import type { Post } from './types/post';
 
 function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [myPosts, setMyPosts] = useState<Post[]>([]);
 
   const handleLogin = (user: User) => {
     setCurrentUser(user);
@@ -53,7 +55,8 @@ function App() {
           path="/dashboard"
           element={
             currentUser ?
-              <Dashboard currentUser={currentUser} onLogout={handleLogout} /> :
+              <Dashboard currentUser={currentUser} onLogout={handleLogout}
+                myPosts={myPosts} setMyPosts={setMyPosts} /> :
               <Navigate to="/login" />
           }
         />
@@ -69,7 +72,8 @@ function App() {
           path="/admin/post/:id/edit"
           element={
             currentUser ?
-              <EditPost currentUser={currentUser} /> :
+              <EditPost currentUser={currentUser}
+                myPosts={myPosts} setMyPosts={setMyPosts} /> :
               <Navigate to="/login" />
           }
         />

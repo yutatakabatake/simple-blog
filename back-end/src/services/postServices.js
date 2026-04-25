@@ -83,7 +83,16 @@ export async function editPost(postData) {
             END,
             updated_at = CURRENT_TIMESTAMP
         WHERE id = $1 AND author_id = $6
-        RETURNING id, author_id, title, excerpt, content, published, published_at`,
+        RETURNING 
+            id,
+            author_id,
+            title,
+            excerpt,
+            content,
+            views,
+            published,
+            updated_at,            
+            published_at`,
         [id, title, excerpt, content, published, author_id]);
 
     return rows[0];

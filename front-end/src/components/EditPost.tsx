@@ -6,15 +6,16 @@ import type { Post } from '../types/post';
 
 interface EditPostProps {
     currentUser: User;
-    mockPosts: Post[];
+    myPosts: Post[];
+    setMyPosts: (posts: Post[]) => void;
 }
 
-function EditPost({ currentUser, mockPosts }: EditPostProps) {
+function EditPost({ currentUser, myPosts, setMyPosts }: EditPostProps) {
     const navigate = useNavigate();
     const { id } = useParams();
-    const postData = mockPosts.find(p => p.id === Number(id));
+    const post = myPosts.find(p => p.id == Number(id));
 
-    if (!postData) {
+    if (!post) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
@@ -27,11 +28,11 @@ function EditPost({ currentUser, mockPosts }: EditPostProps) {
         );
     }
 
-    const isAuthor = postData.authorId == currentUser.id;
+    const isAuthor = post.author_id == currentUser.id;
 
-    const [title, setTitle] = useState(postData.title);
-    const [content, setContent] = useState(postData.content);
-    const [published, setPublished] = useState(postData.published);
+    const [title, setTitle] = useState(post.title);
+    const [content, setContent] = useState(post.content);
+    const [published, setPublished] = useState(post.published);
 
     const handleSave = () => {
         if (!isAuthor) {
@@ -82,7 +83,7 @@ function EditPost({ currentUser, mockPosts }: EditPostProps) {
                         <Lock className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                         <h1 className="text-2xl font-bold text-gray-900 mb-2">編集権限がありません</h1>
                         <p className="text-gray-600 mb-6">
-                            この記事は {postData.authorName} さんの記事です。<br />
+                            この記事は {post.author_name} さんの記事です。<br />
                             自分の記事のみ編集できます。
                         </p>
                         <Link
@@ -111,7 +112,7 @@ function EditPost({ currentUser, mockPosts }: EditPostProps) {
                         </Link>
                         <div className="flex items-center gap-3">
                             <span className="text-sm text-gray-600">
-                                著者: {postData.authorName}
+                                著者: {post.author_name}
                             </span>
                             <button
                                 onClick={handlePreview}

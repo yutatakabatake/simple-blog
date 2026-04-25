@@ -10,6 +10,5 @@ export type Post = {
     views: number,
     published: boolean
     published_at: dayjs.Dayjs,
-    updated_at: dayjs.Dayjs,
-    created_at: dayjs.Dayjs
+    updated_at: dayjs.Dayjs
 }

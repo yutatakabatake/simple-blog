@@ -2,17 +2,19 @@ import { Link } from 'react-router';
 import { PenSquare, Settings, LogOut, Calendar, Eye } from 'lucide-react';
 import type { User } from '../types/user';
 import type { Post } from '../types/post';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import axios from 'axios';
 import dayjs from 'dayjs';
 
 interface DashboardProps {
     currentUser: User;
     onLogout: () => void;
+    myPosts: Post[];
+    setMyPosts: (posts: Post[]) => void;
 }
 
-function Dashboard({ currentUser, onLogout }: DashboardProps) {
-    const [posts, setPosts] = useState<Post[]>([]);
+function Dashboard({ currentUser, onLogout, myPosts, setMyPosts }: DashboardProps) {
+
     useEffect(() => {
         let ignore = false;
         async function fetchPosts() {
@@ -30,7 +32,7 @@ function Dashboard({ currentUser, onLogout }: DashboardProps) {
                     published_at: dayjs(post.published_at)
                 }));
                 if (!ignore) {
-                    setPosts(formattedPosts);
+                    setMyPosts(formattedPosts);
                 }
             } catch (error) {
                 console.log(error);
@@ -101,7 +103,7 @@ function Dashboard({ currentUser, onLogout }: DashboardProps) {
                             <div>
                                 <p className="text-gray-600 text-sm">総投稿数</p>
                                 <p className="text-3xl font-bold text-gray-900 mt-1">
-                                    {posts.filter(p => p.published).length}
+                                    {myPosts.filter(p => p.published).length}
                                 </p>
                             </div>
                             <div className="bg-indigo-100 p-3 rounded-lg">
@@ -115,7 +117,7 @@ function Dashboard({ currentUser, onLogout }: DashboardProps) {
                             <div>
                                 <p className="text-gray-600 text-sm">総閲覧数</p>
                                 <p className="text-3xl font-bold text-gray-900 mt-1">
-                                    {posts.reduce((sum, post) => sum + post.views, 0)}
+                                    {myPosts.reduce((sum, post) => sum + post.views, 0)}
                                 </p>
                             </div>
                             <div className="bg-green-100 p-3 rounded-lg">
@@ -129,7 +131,7 @@ function Dashboard({ currentUser, onLogout }: DashboardProps) {
                             <div>
                                 <p className="text-gray-600 text-sm">下書き</p>
                                 <p className="text-3xl font-bold text-gray-900 mt-1">
-                                    {posts.filter(p => !p.published).length}
+                                    {myPosts.filter(p => !p.published).length}
                                 </p>
                             </div>
                             <div className="bg-amber-100 p-3 rounded-lg">
@@ -144,8 +146,8 @@ function Dashboard({ currentUser, onLogout }: DashboardProps) {
                         <h3 className="text-xl font-bold text-gray-900">あなたの投稿</h3>
                     </div>
                     <div className="divide-y divide-gray-200">
-                        {posts.length > 0 ? (
-                            posts.map((post) => (
+                        {myPosts.length > 0 ? (
+                            myPosts.map((post) => (
                                 <Link
                                     key={post.id}
                                     to={`/admin/post/${post.id}/edit`}
