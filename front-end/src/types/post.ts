@@ -3,11 +3,12 @@ import dayjs from "dayjs";
 export type Post = {
     id: number,
     authorId: number,
-    authorName: string,
     title: string,
     excerpt: string,
     content: string,
-    date: dayjs.Dayjs,
     views: number,
     published: boolean
+    published_at: dayjs.Dayjs,
+    updated_at: dayjs.Dayjs,
+    created_at: dayjs.Dayjs
 }

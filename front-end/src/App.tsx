@@ -10,66 +10,7 @@ import PublicBlog from './components/PublicBlog';
 import PublicPostDetail from './components/PublicPostDetail';
 import './App.css'
 import type { Post } from './types/post';
-import dayjs from 'dayjs';
 import type { User } from './types/user';
-
-const mockPosts: Post[] = [
-  {
-    id: 1,
-    authorId: 1,
-    authorName: '田中太郎',
-    title: 'はじめてのブログ投稿',
-    excerpt: 'これは私の最初のブログ投稿です。とても楽しみにしています！',
-    content: 'これは私の最初のブログ投稿です。ブログを始めることにとても興奮しています！\n\nこのブログでは、日々の学びや経験、考えたことなどを共有していきたいと思います。技術的な話題から、日常の出来事まで、幅広く書いていく予定です。\n\nみなさんと一緒に成長していけたら嬉しいです。よろしくお願いします！',
-    date: dayjs('2026-04-20'),
-    views: 128,
-    published: true
-  },
-  {
-    id: 2,
-    authorId: 1,
-    authorName: '田中太郎',
-    title: 'Reactを学んでみた',
-    excerpt: 'Reactの基礎について学んだことをまとめました。コンポーネント指向はとても便利です。',
-    content: 'Reactの基礎について学んだことをまとめました。\n\nReactはコンポーネント指向のライブラリで、UIを再利用可能な部品として構築できます。これにより、大規模なアプリケーションでも保守性が高いコードを書くことができます。\n\nまた、仮想DOMという仕組みにより、高速なレンダリングが実現されています。\n\nこれからもっと深く学んでいきたいと思います！',
-    date: dayjs('2026-04-18'),
-    views: 245,
-    published: true
-  },
-  {
-    id: 3,
-    authorId: 1,
-    authorName: '田中太郎',
-    title: 'TypeScriptのメリット',
-    excerpt: 'TypeScriptを使うことで、より安全なコードを書くことができます。',
-    content: 'TypeScriptを使うことで、より安全なコードを書くことができます。\n\n型システムのおかげで、開発時に多くのバグを未然に防ぐことができます。また、IDEのサポートも充実しており、自動補完が非常に便利です。\n\n大規模なプロジェクトでは特に威力を発揮します。',
-    date: dayjs('2026-04-15'),
-    views: 189,
-    published: true
-  },
-  {
-    id: 4,
-    authorId: 2,
-    authorName: 'John Macarthey',
-    title: 'Schemeを学んでみた',
-    excerpt: 'Schemeの基礎について学んだことをまとめました。',
-    content: 'Schemeの基礎について学んだことをまとめました。\n\nSchemeは言語仕様が小さく、構文がシンプルなことが特徴です。シンブルながら表現力が高く、十分なプログラミングができます。\n\nこれからもっと深く学んでいきたいと思います！',
-    date: dayjs('2026-04-20'),
-    views: 242,
-    published: true
-  },
-  {
-    id: 5,
-    authorId: 1,
-    authorName: '田中太郎',
-    title: '下書き：次の記事のアイデア',
-    excerpt: 'まだ公開していない下書きの記事です。',
-    content: 'まだ公開していない下書きの記事です。',
-    date: dayjs('2026-04-21'),
-    views: 0,
-    published: false
-  }
-];
 
 function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
