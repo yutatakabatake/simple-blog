@@ -24,6 +24,10 @@ function App() {
     setCurrentUser(null);
   };
 
+  function handleEditUser(user: User): void {
+    setCurrentUser(user);
+  }
+
   return (
     <BrowserRouter>
       <Routes>
@@ -81,7 +85,7 @@ function App() {
           path="/settings"
           element={
             currentUser ?
-              <Settings currentUser={currentUser} /> :
+              <Settings currentUser={currentUser} handleEditUser={handleEditUser} /> :
               <Navigate to="/login" />
           }
         />

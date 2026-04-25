@@ -94,3 +94,29 @@ export async function login(req, res) {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
+
+export async function editUser(req, res) {
+    try {
+        const result = validationResult(req);
+        if (!result.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                errors: result.array().map(err => ({
+                    field: err.path,
+                    message: err.msg
+                }))
+            });
+        }
+
+        const { id } = req.params;
+        const { name, email } = req.body;
+
+        const newUserData = { id: id, name: name, email: email };
+
+        const editedUser = await userServices.editUser(newUserData);
+        res.status(201).json(newUserData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}

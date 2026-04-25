@@ -22,3 +22,15 @@ export async function getUser(userData) {
 
     return rows[0];
 }
+
+export async function editUser(userData) {
+    const { id, name, email } = userData;
+    const { rows } = await query(`
+        UPDATE users_test
+        SET name = $2, email = $3
+        WHERE id = $1
+        RETURNING id, name, email`,
+        [id, name, email]);
+
+    return rows[0];
+}

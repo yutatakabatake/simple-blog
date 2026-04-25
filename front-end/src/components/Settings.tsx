@@ -1,21 +1,39 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
-import { ArrowLeft, User, Mail, Lock, Save } from 'lucide-react';
+import { Link, useNavigate } from 'react-router';
+import { ArrowLeft, User, Mail, Save } from 'lucide-react';
 import type { User as UserType } from '../types/user';
+import axios from 'axios';
 
 interface SettingsProps {
     currentUser: UserType;
+    handleEditUser: (user: UserType) => void;
 }
 
-function Settings({ currentUser }: SettingsProps) {
+function Settings({ currentUser, handleEditUser }: SettingsProps) {
+    const navigate = useNavigate();
     const [name, setName] = useState(currentUser.name);
     const [email, setEmail] = useState(currentUser.email);
-    const [currentPassword, setCurrentPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
 
-    const handleSave = () => {
-        alert('設定を保存しました');
+    async function handleSave() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return;
+        }
+        try {
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            const response = await axios.put(`http://localhost:3000/api/user/edit/${currentUser.id}`,
+                {
+                    name,
+                    email
+                }
+            );
+            const editedUser: UserType = response.data;
+            handleEditUser(editedUser);
+            alert('設定を保存しました');
+            navigate('/dashboard');
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     return (
@@ -75,59 +93,6 @@ function Settings({ currentUser }: SettingsProps) {
                                         className="w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
                                     />
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <div className="flex items-center gap-2 mb-6">
-                            <Lock className="w-6 h-6 text-amber-600" />
-                            <h2 className="text-xl font-semibold text-gray-900">パスワード変更</h2>
-                        </div>
-
-                        <div className="space-y-4">
-                            <div>
-                                <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                                    現在のパスワード
-                                </label>
-                                <input
-                                    id="currentPassword"
-                                    type="password"
-                                    value={currentPassword}
-                                    onChange={(e) => setCurrentPassword(e.target.value)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
-                                    placeholder="••••••••"
-                                />
-                            </div>
-
-                            <div>
-                                <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                                    新しいパスワード
-                                </label>
-                                <input
-                                    id="newPassword"
-                                    type="password"
-                                    value={newPassword}
-                                    onChange={(e) => setNewPassword(e.target.value)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
-                                    placeholder="••••••••"
-                                />
-                            </div>
-
-                            <div>
-                                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
-                                    新しいパスワード確認
-                                </label>
-                                <input
-                                    id="confirmPassword"
-                                    type="password"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
-                                    placeholder="••••••••"
-                                />
                             </div>
                         </div>
                     </div>
