@@ -14,7 +14,7 @@ export async function getPublicPosts(req, res) {
 export async function addNewPost(req, res) {
     try {
         const { author_id, title, excerpt, content, published } = req.body;
-        if (!author_id || !title || !excerpt || !content || !published) {
+        if (!author_id || !title || !excerpt || !content) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
