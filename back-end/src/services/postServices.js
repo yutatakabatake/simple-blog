@@ -71,6 +71,7 @@ export async function getMyPosts(userData) {
 export async function editPost(postData) {
     const { id, title, excerpt, content, published, author_id } = postData;
     const { rows } = await query(`
+        WITH updated_post AS (
         UPDATE posts_test
         SET
             title = $2,
@@ -83,16 +84,21 @@ export async function editPost(postData) {
             END,
             updated_at = CURRENT_TIMESTAMP
         WHERE id = $1 AND author_id = $6
-        RETURNING 
-            id,
-            author_id,
-            title,
-            excerpt,
-            content,
-            views,
-            published,
-            updated_at,            
-            published_at`,
+        RETURNING *
+        )
+        SELECT 
+            p.id,
+            p.author_id,
+            u.name AS author_name, -- ここでusersテーブルから取得
+            p.title,
+            p.excerpt,
+            p.content,
+            p.views,
+            p.published,
+            p.published_at,
+            p.updated_at
+        FROM updated_post p
+        JOIN users_test u ON p.author_id = u.id;`,
         [id, title, excerpt, content, published, author_id]);
 
     return rows[0];

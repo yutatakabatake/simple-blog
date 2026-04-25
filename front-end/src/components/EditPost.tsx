@@ -3,6 +3,8 @@ import { Link, useNavigate, useParams } from 'react-router';
 import { ArrowLeft, Save, Trash2, Eye, Lock } from 'lucide-react';
 import type { User } from '../types/user';
 import type { Post } from '../types/post';
+import axios from 'axios';
+import dayjs from 'dayjs';
 
 interface EditPostProps {
     currentUser: User;
@@ -31,16 +33,45 @@ function EditPost({ currentUser, myPosts, setMyPosts }: EditPostProps) {
     const isAuthor = post.author_id == currentUser.id;
 
     const [title, setTitle] = useState(post.title);
+    const [excerpt, setExcerpt] = useState(post.excerpt);
     const [content, setContent] = useState(post.content);
     const [published, setPublished] = useState(post.published);
 
-    const handleSave = () => {
+    async function handleSave() {
         if (!isAuthor) {
             alert('この記事を編集する権限がありません');
             return;
         }
-        alert('記事を更新しました');
-        navigate('/dashboard');
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return;
+        }
+
+        try {
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            const response = await axios.put(`http://localhost:3000/api/post/edit/${id}`,
+                {
+                    author_id: currentUser.id,
+                    title,
+                    excerpt,
+                    content,
+                    published
+                });
+            const resPost: Post = response.data;
+            const formattedPost: Post = {
+                ...resPost,
+                updated_at: dayjs(resPost.updated_at),
+                published_at: dayjs(resPost.published_at)
+            };
+            const newPosts: Post[] = myPosts.map(post => post.id == formattedPost.id ? formattedPost : post);
+            setMyPosts(newPosts);
+            alert('記事を更新しました');
+            setMyPosts
+            navigate('/dashboard');
+        } catch (error) {
+            console.error('Failed to update the article', error);
+        }
     };
 
     const handleDelete = () => {
@@ -162,6 +193,20 @@ function EditPost({ currentUser, myPosts, setMyPosts }: EditPostProps) {
                             onChange={(e) => setTitle(e.target.value)}
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition text-2xl font-semibold"
                             placeholder="記事のタイトルを入力..."
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="excerpt" className="block text-sm font-medium text-gray-700 mb-2">
+                            本文
+                        </label>
+                        <textarea
+                            id="excerpt"
+                            value={excerpt}
+                            onChange={(e) => setExcerpt(e.target.value)}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition resize-none"
+                            rows={2}
+                            placeholder="ここに記事の本文を書きましょう..."
                         />
                     </div>
 
