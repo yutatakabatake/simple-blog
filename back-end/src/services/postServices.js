@@ -62,3 +62,24 @@ export async function getMyPosts(userData) {
 
     return rows;
 }
+
+export async function editPost(postData) {
+    const { id, title, excerpt, content, published, author_id } = postData;
+    const { rows } = await query(`
+        UPDATE posts_test
+        SET
+            title = $2,
+            excerpt = $3,
+            content = $4,
+            published = $5,
+            published_at = CASE
+                WHEN $5 = true THEN COALESCE(published_at, CURRENT_TIMESTAMP)
+                ELSE published_at
+            END,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = $1 AND author_id = $6
+        RETURNING id, author_id, title, excerpt, content, published, published_at`,
+        [id, title, excerpt, content, published, author_id]);
+
+    return rows[0];
+}

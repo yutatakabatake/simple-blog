@@ -48,3 +48,21 @@ export async function getMyPosts(req, res) {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
+
+export async function editPost(req, res) {
+    try {
+        const { id } = req.params;
+        const { title, excerpt, content, published, author_id } = req.body;
+        if (!title || !excerpt || !content) {
+            res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        const postData = { id, title, excerpt, content, published, author_id };
+
+        const editedPost = await postServices.editPost(postData);
+        res.status(200).json(editedPost);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
