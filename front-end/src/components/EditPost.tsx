@@ -67,21 +67,35 @@ function EditPost({ currentUser, myPosts, setMyPosts }: EditPostProps) {
             const newPosts: Post[] = myPosts.map(post => post.id == formattedPost.id ? formattedPost : post);
             setMyPosts(newPosts);
             alert('記事を更新しました');
-            setMyPosts
             navigate('/dashboard');
         } catch (error) {
             console.error('Failed to update the article', error);
         }
     };
 
-    const handleDelete = () => {
+    async function handleDelete() {
         if (!isAuthor) {
             alert('この記事を削除する権限がありません');
             return;
         }
         if (confirm('本当にこの記事を削除しますか？')) {
-            alert('記事を削除しました');
-            navigate('/dashboard');
+            const token = localStorage.getItem('token');
+            if (!token) {
+                return;
+            }
+
+            try {
+                axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                await axios.delete(`http://localhost:3000/api/post/delete/${id}`,
+                    { data: { author_id: currentUser.id } }
+                );
+                const newPosts = myPosts.filter(post => post.id != Number(id));
+                setMyPosts(newPosts);
+                alert('記事を削除しました');
+                navigate('/dashboard');
+            } catch (error) {
+                console.error('Failed to delete the article', error);
+            }
         }
     };
 
