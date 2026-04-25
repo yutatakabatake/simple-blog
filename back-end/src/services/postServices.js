@@ -83,3 +83,14 @@ export async function editPost(postData) {
 
     return rows[0];
 }
+
+export async function deletePost(postData) {
+    const { id, author_id } = postData;
+    const { rows } = await query(`
+        DELETE FROM posts_test
+        WHERE id = $1 AND author_id = $2
+        RETURNING id`,
+        [id, author_id]);
+
+    return rows[0];
+}

@@ -66,3 +66,18 @@ export async function editPost(req, res) {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
+
+export async function deletePost(req, res) {
+    try {
+        const { id } = req.params;
+        const { author_id } = req.body;
+
+        const postData = { id, author_id };
+
+        const deletedPost = await postServices.deletePost(postData);
+        res.status(200).json(deletedPost);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
