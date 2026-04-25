@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import { Mail, Lock, User } from 'lucide-react';
 import type { User as UserType } from '../types/user';
+import axios from 'axios';
 
 
 interface RegisterProps {
@@ -9,20 +10,23 @@ interface RegisterProps {
 }
 
 function Register({ onRegister }: RegisterProps) {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [name, setName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [confirmPassword, setConfirmPassword] = useState<string>('');
 
-    const handleSubmit = (e: React.SubmitEvent) => {
+    async function handleSubmit(e: React.SubmitEvent) {
         e.preventDefault();
         if (password === confirmPassword) {
-            const newUser: UserType = {
-                id: Number(Date.now()),
-                name,
-                email
-            };
-            onRegister(newUser);
+            try {
+                const registerData = { name: name, email: email, password: password };
+                const response = await axios.post(`http://localhost:3000/api/user/register`, registerData);
+                const { token, user } = response.data;
+                onRegister(user);
+                localStorage.setItem('token', token);
+            } catch (error) {
+                console.error('Error registering user:', error);
+            }
         } else {
             alert('パスワードが一致しません');
         }

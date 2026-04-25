@@ -17,7 +17,9 @@ function Login({ onLogin }: LoginProps) {
         const loginData = { email: email, password: password };
         try {
             const response = await axios.post(`http://localhost:3000/api/user/login`, loginData);
-            onLogin(response.data);
+            const { token, user } = response.data;
+            onLogin(user);
+            localStorage.setItem('token', token);
         } catch (error) {
             console.error(error);
             alert('メールアドレスまたはパスワードが正しくありません');
