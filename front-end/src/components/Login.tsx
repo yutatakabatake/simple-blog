@@ -2,22 +2,24 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import { Mail, Lock } from 'lucide-react';
 import type { User } from '../types/user';
+import axios from 'axios';
 
 interface LoginProps {
     onLogin: (user: User) => void;
-    mockUsers: any[];
 }
 
-function Login({ onLogin, mockUsers }: LoginProps) {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+function Login({ onLogin }: LoginProps) {
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
 
-    const handleSubmit = (e: React.FormEvent) => {
+    async function handleSubmit(e: React.SubmitEvent) {
         e.preventDefault();
-        const user = mockUsers.find(u => u.email === email && u.password === password);
-        if (user) {
-            onLogin({ id: user.id, name: user.name, email: user.email });
-        } else {
+        const loginData = { email: email, password: password };
+        try {
+            const response = await axios.post(`http://localhost:3000/api/user/login`, loginData);
+            onLogin(response.data);
+        } catch (error) {
+            console.error(error);
             alert('メールアドレスまたはパスワードが正しくありません');
         }
     };

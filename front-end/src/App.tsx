@@ -11,17 +11,7 @@ import PublicPostDetail from './components/PublicPostDetail';
 import './App.css'
 import type { Post } from './types/post';
 import dayjs from 'dayjs';
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
-
-const mockUsers = [
-  { id: 1, name: '田中太郎', email: 'tanaka@example.com', password: 'password123' },
-  { id: 2, name: 'John Macathey', email: 'john@example.com', password: 'password123' }
-];
+import type { User } from './types/user';
 
 const mockPosts: Post[] = [
   {
@@ -110,8 +100,7 @@ function App() {
           element={
             currentUser ?
               <Navigate to="/dashboard" /> :
-              <Login onLogin={handleLogin}
-                mockUsers={mockUsers} />
+              <Login onLogin={handleLogin} />
           }
         />
         <Route
