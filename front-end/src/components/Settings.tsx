@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { ArrowLeft, User, Mail, Lock, Globe, Save } from 'lucide-react';
+import { ArrowLeft, User, Mail, Lock, Save } from 'lucide-react';
 import type { User as UserType } from '../types/user';
 
 interface SettingsProps {
@@ -10,8 +10,6 @@ interface SettingsProps {
 function Settings({ currentUser }: SettingsProps) {
     const [name, setName] = useState(currentUser.name);
     const [email, setEmail] = useState(currentUser.email);
-    const [blogTitle, setBlogTitle] = useState('マイブログ');
-    const [blogDescription, setBlogDescription] = useState('技術と日常について書いています');
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
