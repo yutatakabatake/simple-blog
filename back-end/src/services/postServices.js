@@ -47,13 +47,15 @@ export async function getMyPosts(userData) {
     const { rows } = await query(`
         SELECT
             p.id,
+            u.id AS author_id,
             u.name AS author_name,
             p.title,
             p.excerpt,
             p.content,
+            p.views,
             p.published,
-            p.updated_at,
-            p.published_at
+            p.published_at,
+            p.updated_at
         FROM posts_test p
         JOIN users_test u ON p.author_id = u.id
         WHERE p.author_id = $1

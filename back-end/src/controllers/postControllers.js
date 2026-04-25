@@ -35,7 +35,7 @@ export async function addNewPost(req, res) {
 
 export async function getMyPosts(req, res) {
     try {
-        const { author_id } = req.body;
+        const author_id = req.params.userId;
         if (!author_id) {
             res.status(400).json({ error: 'Missing required fields' });
         }

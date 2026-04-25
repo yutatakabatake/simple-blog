@@ -9,7 +9,6 @@ import Settings from './components/Settings';
 import PublicBlog from './components/PublicBlog';
 import PublicPostDetail from './components/PublicPostDetail';
 import './App.css'
-import type { Post } from './types/post';
 import type { User } from './types/user';
 
 function App() {
@@ -28,13 +27,11 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={<PublicBlog isAuthenticated={!!currentUser}
-            mockPosts={mockPosts} />}
+          element={<PublicBlog isAuthenticated={!!currentUser} />}
         />
         <Route
           path="/post/:id"
-          element={<PublicPostDetail isAuthenticated={!!currentUser}
-            mockPosts={mockPosts} />}
+          element={<PublicPostDetail isAuthenticated={!!currentUser} />}
         />
         <Route
           path="/login"
@@ -56,8 +53,7 @@ function App() {
           path="/dashboard"
           element={
             currentUser ?
-              <Dashboard currentUser={currentUser} onLogout={handleLogout}
-                mockPosts={mockPosts} /> :
+              <Dashboard currentUser={currentUser} onLogout={handleLogout} /> :
               <Navigate to="/login" />
           }
         />
@@ -73,8 +69,7 @@ function App() {
           path="/admin/post/:id/edit"
           element={
             currentUser ?
-              <EditPost currentUser={currentUser}
-                mockPosts={mockPosts} /> :
+              <EditPost currentUser={currentUser} /> :
               <Navigate to="/login" />
           }
         />

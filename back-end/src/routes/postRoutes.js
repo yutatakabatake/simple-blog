@@ -6,7 +6,7 @@ const postRouter = express.Router();
 
 postRouter.get('/post/public', getPublicPosts);
 postRouter.post('/post/new', addNewPost);
-postRouter.get('/post/me', checkAuth, getMyPosts);
+postRouter.get('/post/me/:userId', checkAuth, getMyPosts);
 postRouter.put('/post/edit/:id', checkAuth, editPost);
 postRouter.delete('/post/delete/:id', checkAuth, deletePost);
 
