@@ -69,7 +69,6 @@ npm run dev
 
 - `back-end/`
   - `src/`: Express server code, routes, controllers, services, DB connection
-  - `memo.md`: DB schema notes and SQL examples
 - `front-end/`
   - `src/`: React application with pages and components
   - `public/`: static files
